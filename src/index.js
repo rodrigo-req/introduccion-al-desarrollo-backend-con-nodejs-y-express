@@ -45,6 +45,12 @@ app.get('/languages/:lang', (request, response) => {
   }
 });
 
+
+/*
+  Function for commit from A
+*/
+
+
 app.get('*', (request, response) => {
   response.status(404).send('NOT FOUND');
 });
