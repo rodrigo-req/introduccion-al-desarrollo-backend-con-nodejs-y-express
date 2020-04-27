@@ -1,67 +1,61 @@
-const express = require("express");
-const { info, error } = require("./modules/my-log");
-const { countries } = require("countries-list");
+/* eslint-disable linebreak-style */
+/* eslint-disable no-console */
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+const express = require('express');
+const { countries, languages } = require('countries-list');
+const { info, error } = require('./modules/my-log');
 
 app = express();
 
-//Configurando get
+// Configurando get
 
-app.get("/",function(request, response){
-  response.status(200).send("Hello")
+app.get('/', (request, response) => {
+  response.status(200).send('Hello');
 });
 
-app.get("/info",function(request, response){
-  //Express automaticamente va a agregar el status 200 correspondiente.
-
-  info("Show logs of info on console output.")
-  response.send("INFO")
+app.get('/info', (request, response) => {
+  // Express automaticamente va a agregar el status 200 correspondiente.
+  info('Show logs of info on console output.');
+  response.send('INFO');
 });
 
-app.get("*",function(request, response){
-  response.status(404).send("NOT FOUND")
+app.get('/country', (request, response) => {
+  console.log(request.query);
+  // response.send(JSON.stringify(countries[request.query.code]));
+  // Para poder mostrar JSON con express utilizamos response.json
+  response.json(countries[request.query.code]);
 });
 
+app.get('/languages/:lang', (request, response) => {
+  console.log('Request.params:', request.params);
+  // Se puede capturar un parametro con ":NOMBRE"
 
-// var server = http.createServer(function(request, response) {
-//   var parsed = url.parse(request.url);
-//   console.log("parsed:", parsed);
+  const lang = languages[request.params.lang];
 
-//   var pathname = parsed.pathname;
+  // Si tuviese que retornar error en formato JSON
+  if (lang) {
+    // response.json(lang);
+    response.json({ status: 'OK', data: lang });
+  } else {
+    response.status(404).json({
+      status: 'NOT FOUND',
+      message: `Language ${request.params.lang} not found.`,
+    });
+  }
+});
 
-//   var query = querystring.parse(parsed.query);
-//   console.log("query", query);
+app.get('*', (request, response) => {
+  response.status(404).send('NOT FOUND');
+});
 
-//   if (pathname === "/") {
-//     response.writeHead(200, { "Content-Type": "text/html" });
-//     response.write("<html><body><p>HOME PAGE</p></body></html>");
-//     response.end();
-//   } else if (pathname === "/exit") {
-//     response.writeHead(200, { "Content-Type": "text/html" });
-//     response.write("<html><body><p>BYE</p></body></html>");
-//     response.end();
-//   } else if (pathname === "/country") {
-//     response.writeHead(200, { "Content-Type": "application/json" });
-//     response.write(JSON.stringify(countries[query.code]));
-//     response.end();
-//   } else if (pathname === "/info") {
-//     var result = info(pathname);
-//     response.writeHead(200, { "Content-Type": "text/html" });
-//     response.write(result);
-//     response.end();
-//   } else if (pathname === "/error") {
-//     var result = error(pathname);
-//     response.writeHead(200, { "Content-Type": "text/html" });
-//     response.write(result);
-//     response.end();
-//   } else {
-//     response.writeHead(404, { "Content-Type": "text/html" });
-//     response.write("<html><body><p>NOT FOUND</p></body></html>");
-//     response.end();
-//   }
-// });
+/*
+app.listen(4000, function () {
+  console.log('running on 4000');
+});
+*/
 
-
-
-app.listen(4000, function(){
-  console.log("running on 4000");
+// Migrando a arrow function
+app.listen(4000, () => {
+  console.log('running on 4000');
 });
