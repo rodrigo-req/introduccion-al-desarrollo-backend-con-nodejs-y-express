@@ -48,6 +48,7 @@ app.get('/languages/:lang', (request, response) => {
 
 /*
   Function for commit from A
+  Plus something else...
 */
 
 
