@@ -4,6 +4,24 @@ const { countries } = require("countries-list");
 
 app = express();
 
+//Configurando get
+
+app.get("/",function(request, response){
+  response.status(200).send("Hello")
+});
+
+app.get("/info",function(request, response){
+  //Express automaticamente va a agregar el status 200 correspondiente.
+
+  info("Show logs of info on console output.")
+  response.send("INFO")
+});
+
+app.get("*",function(request, response){
+  response.status(404).send("NOT FOUND")
+});
+
+
 // var server = http.createServer(function(request, response) {
 //   var parsed = url.parse(request.url);
 //   console.log("parsed:", parsed);
