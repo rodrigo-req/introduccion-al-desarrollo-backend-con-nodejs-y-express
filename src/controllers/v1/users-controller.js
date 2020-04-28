@@ -24,14 +24,16 @@ const bcrypt = require('bcrypt');
   Convertimos la funcion en ASINCRONA, para que en caso de existir un error, no se intente mandar el hash como respuesta (ya que se envio un 505 anteriormente)
 */
 const createUser = async (req, res) => {
-  console.log('req.body', req.body);
+  try {
+    // Puedo guardar el hash en una variable, y AWAIT me permite acceder directamente al valor del string.
+    // En caso contrario, hash seria de tipo Promise<String>
+    const hash = await bcrypt.hash(req.body.password, 15);
 
-  // Puedo guardar el hash en una variable, y AWAIT me permite acceder directamente al valor del string.
-  // En caso contrario, hash seria de tipo Promise<String>
-  const hash = await bcrypt.hash(req.body.password, 15);
-  console.log('FIN');
-
-  res.status(200).send({status: "Success", data: hash});
+    res.status(200).send({ status: 'OK', data: hash });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ status: 'Error', message: error.message });
+  }
 };
 
 const deleteUser = (req, res) => {
