@@ -4,6 +4,12 @@
 /* eslint-disable no-unused-vars */
 const express = require('express');
 const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+
+dotenv.config();
+
+console.log('Mongo CS:', process.env.MONGO);
 
 const app = express();
 
@@ -21,7 +27,22 @@ const routesv1 = require('./routes/v1');
 
 routesv1(app);
 
+mongoose
+  .connect(process.env.MONGO, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log('Connected to mongoDB');
+  })
+  .catch((error) => {
+    console.log('MongoDB Error:', error);
+  });
+
+// En caso de que no se defina PORT, setear 4000.
+const PORT = process.env.PORT || 4000;
+
 // Migrando a arrow function
-app.listen(4000, () => {
-  console.log('running on 4000');
+app.listen(process.env.PORT, () => {
+  console.log(`running on ${PORT}`);
 });

@@ -1,6 +1,7 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable no-unused-vars */
 const bcrypt = require('bcrypt');
+const Users = require("../../mongo/models/users")
 
 // const createUser = (req, res) => {
 //   console.log('req.body', req.body);
@@ -25,9 +26,19 @@ const bcrypt = require('bcrypt');
 */
 const createUser = async (req, res) => {
   try {
-    // Puedo guardar el hash en una variable, y AWAIT me permite acceder directamente al valor del string.
-    // En caso contrario, hash seria de tipo Promise<String>
-    const hash = await bcrypt.hash(req.body.password, 15);
+    /*
+    const username = req.body.username;
+    const password = req.body.password;
+    const email = req.body.email;
+    */
+
+    /*
+    const { username } = req.body;
+    const { password } = req.body;
+    const { email } = req.body;
+    */
+    const { username, password, email, data } = req.body;
+    const hash = await bcrypt.hash(password, 15);
 
     res.status(200).send({ status: 'OK', data: hash });
   } catch (error) {
