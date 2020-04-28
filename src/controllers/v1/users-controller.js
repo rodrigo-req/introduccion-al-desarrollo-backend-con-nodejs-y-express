@@ -1,5 +1,9 @@
+const bcrypt = require('bcrypt');
+
 const createUser = (req, res) => {
-  res.send({status:"OK", message: "User created!"});
+  console.log("req.body", req.body)
+
+  
 };
 
 const deleteUser = (req, res) => {
