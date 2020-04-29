@@ -79,7 +79,6 @@ const deleteUser = (req, res) => {
 };
 
 const getUsers = (req, res) => {
-  res.send({ status: 'OK', data: [] });
 };
 
 const updateUser = (req, res) => {
