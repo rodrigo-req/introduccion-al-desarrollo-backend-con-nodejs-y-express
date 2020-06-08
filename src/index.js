@@ -3,70 +3,46 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 const express = require('express');
-const { countries, languages } = require('countries-list');
-const { info, error } = require('./modules/my-log');
+const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 
-app = express();
+dotenv.config();
 
-// Configurando get
+console.log('Mongo CS:', process.env.MONGO);
 
-app.get('/', (request, response) => {
-  response.status(200).send('Hello');
-});
+const app = express();
 
-app.get('/info', (request, response) => {
-  // Express automaticamente va a agregar el status 200 correspondiente.
-  info('Show logs of info on console output.');
-  response.send('INFO');
-});
+app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get('/country', (request, response) => {
-  console.log(request.query);
-  // response.send(JSON.stringify(countries[request.query.code]));
-  // Para poder mostrar JSON con express utilizamos response.json
-  response.json(countries[request.query.code]);
-});
-
-app.get('/languages/:lang', (request, response) => {
-  console.log('Request.params:', request.params);
-  // Se puede capturar un parametro con ":NOMBRE"
-
-  const lang = languages[request.params.lang];
-
-  // Si tuviese que retornar error en formato JSON
-  if (lang) {
-    // response.json(lang);
-    response.json({ status: 'OK', data: lang });
-  } else {
-    response.status(404).json({
-      status: 'NOT FOUND',
-      message: `Language ${request.params.lang} not found.`,
-    });
-  }
-});
-
+app.use(bodyParser.json());
 
 /*
-  Function for commit from A
-  Plus something else...
+  Importo index.js de v1, por lo que no hace falta definirlo en el require.
 */
+const routesv1 = require('./routes/v1');
 
+// In case the export was planned as a function and not a object.
+// const myRoutes = require("./routes")
 
-app.get('*', (request, response) => {
-  response.status(404).send('NOT FOUND');
-});
+routesv1(app);
 
-/*
-app.listen(4000, function () {
-  console.log('running on 4000');
-});
-*/
+mongoose
+  .connect(process.env.MONGO, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log('Connected to mongoDB');
+  })
+  .catch((error) => {
+    console.log('MongoDB Error:', error);
+  });
 
-/*
-  Function for commit from B
-*/
+// En caso de que no se defina PORT, setear 4000.
+const PORT = process.env.PORT || 4000;
 
 // Migrando a arrow function
-app.listen(4000, () => {
-  console.log('running on 4000');
+app.listen(process.env.PORT, () => {
+  console.log(`running on ${PORT}`);
 });
